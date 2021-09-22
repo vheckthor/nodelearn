@@ -5,8 +5,11 @@ const mongoose = require('mongoose');
 const Profile = require('./models/profile');
 const blogRoutes = require('./routes/blogRoutes');
 const port = process.env.PORT || 3000;
+const env = require('dotenv').config();
+
 //db string
-const dbUrl = 'mongodb+srv://vheckthor:Terminator.123@myblog.rmwol.mongodb.net/Bloggers?retryWrites=true&w=majority'
+const dbUrl = process.env.dbUrl;
+
 mongoose.connect(dbUrl,{useNewUrlParser: true, useUnifiedTopology: true})
 .then((result) => {
     console.log('Connected to MongoDB');
