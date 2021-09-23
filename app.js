@@ -6,6 +6,7 @@ const Profile = require('./models/profile');
 const blogRoutes = require('./routes/blogRoutes');
 const port = process.env.PORT || 3000;
 const env = require('dotenv').config();
+var request = require('request');
 
 //db string
 const dbUrl = process.env.dbUrl;
@@ -62,6 +63,7 @@ app.post('/data',(req,res) => {
 
     profile.save()
     .then((result)=>{
+       sentTelegramMessage(`New profile added: ${result}`);
         res.status(201).send({
             success: true,
             data: result,
@@ -80,3 +82,16 @@ app.use((req, res) => {
     res.status(404).render('404',{title:"404"});
 });
 
+
+function sentTelegramMessage (message) {
+    const token = process.env.telegramToken;
+    const chatId = process.env.chatId;
+    const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=@${chatId}&text=${message}`;
+
+    request(url,(error,response,body)=>{
+        let json = JSON.parse(body);
+        if(error){
+          console.log(error);
+        }
+    });
+}
